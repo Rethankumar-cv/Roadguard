@@ -1,50 +1,88 @@
-# 🚦 RoadGuard AI
+<div align="center">
+  <h1>🚦 RoadGuard AI</h1>
+  <p><strong>Next-Generation Cloud-Native Traffic Monitoring & Violation Analytics Dashboard</strong></p>
+  <img src="https://img.shields.io/badge/React-19-0ea5e9?style=flat-square&logo=react" alt="React 19" />
+  <img src="https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=nodedotjs" alt="Node.js" />
+  <img src="https://img.shields.io/badge/AWS-S3%20%7C%20Athena-232F3E?style=flat-square&logo=amazonaws" alt="AWS" />
+  <img src="https://img.shields.io/badge/Styling-Material--UI%20%7C%20Ant%20Design-1890FF?style=flat-square" alt="UI" />
+</div>
 
-**RoadGuard AI** is a comprehensive, AI-powered traffic monitoring and surveillance dashboard. Designed for scalability and real-time analytics, it processes live camera grid feeds, detects traffic violations, and visualizes large-scale traffic data directly from AWS using a modern React frontend and a robust Node.js backend.
+<br />
 
-## ✨ Features
+**RoadGuard AI** is a highly scalable, real-time traffic monitoring, and surveillance dashboard interface. It is architected to rapidly ingest, process, and visualize city-wide traffic camera feeds while reliably tracking traffic violations like overspeeding, wrong-side driving, and helmetless driving.
 
-- **Surveillance Monitor & Camera Grid**: Real-time visualization of the camera network status and live video feeds.
-- **Violation Explorer**: Instant tracking, filtering, and deep-dive analysis of logged traffic violations.
-- **Data Analytics Dashboard**: Built-in charts and metrics tracking processing status, violation trends, and system performance.
-- **Cloud-Native Data Pipeline**: Seamlessly integrates with **AWS S3** for secure media/document storage and **AWS Athena** for querying massive datasets on the fly.
-- **Interactive UI**: A highly responsive, dark-themed dashboard built with Material-UI, Ant Design, Recharts, and Three.js for interactive rendering.
+---
 
-## 🛠️ Tech Stack
+## 🌟 Key Features
 
-**Frontend (Client)**
-- React 19 (Vite)
-- Material-UI (MUI), Ant Design, & Tailwind CSS for styling
-- Recharts for data visualization
-- Three.js for 3D/Interactive rendering elements
+### 🖥️ Frontend (React 19 Dashboard)
+Designed with a state-of-the-art dark theme, leveraging **Material-UI (MUI)**, **Ant Design**, and **TailwindCSS** for a seamless user experience.
+* **Live Surveillance Monitor (`/surveillance`)**: 
+  * Interactive **Camera Grid** mimicking live CCTVs.
+  * Real-time **Network Health** and **Camera Status** metrics.
+  * Live **Violation Feed** highlighting events instantaneously with pop-up toast notifications.
+* **Violation Explorer (`/violations`)**: 
+  * Advanced **Ant Design Data Tables** with built-in instant debounced searches.
+  * Multi-dimensional filtering by Location, Camera ID, Violation Type, and Date/Time limits.
+  * One-click **CSV / JSON Exports** for violation reports.
+  * Detailed modal breakdown indicating vehicle specifics, timestamp, speed, and violation category.
+* **Analytics Platform**: Extensive graphical insights built on **Recharts** detailing daily trends and processing latency.
 
-**Backend (API Data Layer)**
-- Node.js & Express
-- AWS SDK v3 (`@aws-sdk/client-athena`, `@aws-sdk/client-s3`)
-- Multer for file upload handling
+### ⚙️ Backend (Node.js API Layer)
+A high-performance **Express** backend functioning as the primary interface between the React client and underlying Big Data cloud services.
+* **AWS Athena Integration**: 
+  * Custom polling system built using `@aws-sdk/client-athena` tracking query executions states.
+  * Built-in **5-Second Query Caching Mechanism** to optimize Athena costs while delivering instant dashboard updates.
+* **AWS S3 Storage Layer**: 
+  * Direct file buffer uploads (`multer` + `@aws-sdk/client-s3`) capturing metadata like standard timestamps and UUID-based keys.
+* **RESTful Endpoints**: Dedicated routes for `/analytics/cameras`, `/analytics/network-health`, `/violations`, and `/upload`.
+
+---
+
+## 🏗️ Technical Architecture
+
+```mermaid
+graph LR
+    A[React 19 Dashboard] -->|REST API| B(Node.js / Express Backend)
+    B -->|Athena SDK| C{AWS Athena}
+    B -->|S3 SDK / Multer| D[(AWS S3 Data Lake)]
+    C --> D
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- AWS Account with appropriate S3 and Athena access policies
-- Environment variables configured `.env` with your AWS credentials
+* **Node.js** (v18.0 or newer)
+* **AWS Account** credentials configuring access to `S3` and `Athena` scopes.
 
-### Running Locally
+### 1. Environment Configuration
 
-1. **Start the Backend API:**
-   ```bash
-   cd backend
-   npm install
-   npm run dev
-   ```
-   *The Express server will start up on its configured port, connecting to your AWS services.*
+In the `backend` directory, create a `.env` file:
+```env
+PORT=5000
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+ATHENA_DATABASE=roadguard_db
+ATHENA_OUTPUT=s3://roadguard-traffic-data/athena-results/
+S3_RAW_BUCKET=roadguard-traffic-data
+```
 
-2. **Start the Frontend Dashboard:**
-   Open a new terminal window:
-   ```bash
-   cd roadguard-ai
-   npm install
-   npm run dev
-   ```
-   *The Vite development server will launch on `http://localhost:5173/`.*
+### 2. Launching the Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### 3. Launching the Frontend
+Open a new terminal session and run:
+```bash
+cd roadguard-ai
+npm install
+npm run dev
+```
+Navigate to `http://localhost:5173` to interact with your dashboard.
+
+---
+> *Developed for performance, visual excellence, and modern urban traffic enforcement.*
